@@ -25,7 +25,9 @@ public class SelectSort extends Base {
 	}
 
 	public static void main(String[] args) {
+		getBeforeTime();
 		sort();
+		getAfterTime();
 		outPutArray();
 	}
 }

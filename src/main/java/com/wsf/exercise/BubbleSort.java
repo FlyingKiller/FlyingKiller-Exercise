@@ -1,7 +1,6 @@
 package com.wsf.exercise;
 
 public class BubbleSort extends Base {
-
 	public static void sort() {
 		int tag = 0;
 		for (int i = length; i > 0; i--) {
@@ -18,7 +17,9 @@ public class BubbleSort extends Base {
 	}
 
 	public static void main(String[] args) {
+		getBeforeTime();
 		sort();
+		getAfterTime();
 		outPutArray();
 	}
 }
