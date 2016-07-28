@@ -17,7 +17,7 @@ public class Base {
 	}
 
 	public static void outPutArray() {
-		for (int i = 0; i < length; i++) {
+		for (int i = 0; i < array.length; i++) {
 			System.out.println(array[i]);
 		}
 		System.out.println("运行时间为：" + afterTime + "   " + beforeTime + "   " + (afterTime - beforeTime));
