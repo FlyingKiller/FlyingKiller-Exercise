@@ -8,7 +8,7 @@ package com.wsf.exercise;
  */
 public class SelectSort extends Base {
 	public static void sort() {
-		for (int i = 0; i < length - 1; i++) {// 外围循环,控制比较基数，依次加1.
+		for (int i = 0; i < length - 1; i++) {// 外围循环,被选择元素，下标依次加1.
 			int min = array[i];
 			int tag = 0;
 			for (int k = i + 1; k < length; k++) {// 内层循环,循环比较元素
