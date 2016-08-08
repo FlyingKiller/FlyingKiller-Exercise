@@ -22,4 +22,12 @@ public class Base {
 		}
 		System.out.println("运行时间为：" + afterTime + "   " + beforeTime + "   " + (afterTime - beforeTime));
 	}
+
+	public static void myOutPutArray(int i) {
+		if (i < array.length) {
+			System.out.println(array[i]);
+			i++;
+			myOutPutArray(i);
+		}
+	}
 }

@@ -19,9 +19,24 @@ public class InsertSort extends Base {
 		}
 	}
 
+	public static void antherSort() {
+		for (int i = 1; i < length; i++) {
+			int tag = array[i];
+			int k = i - 1;
+			for (; k >= 0; k--) {
+				if (tag < array[k]) {
+					array[k + 1] = array[k];
+				}
+			}
+			if (tag < array[k + 1]) {
+				array[k + 1] = tag;
+			}
+		}
+	}
+
 	public static void main(String[] args) {
 		getBeforeTime();
-		sort();
+		antherSort();
 		getAfterTime();
 		outPutArray();
 	}
