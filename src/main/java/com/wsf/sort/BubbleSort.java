@@ -1,4 +1,4 @@
-package com.wsf.exercise;
+package com.wsf.sort;
 
 public class BubbleSort extends Base {
 

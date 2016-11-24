@@ -1,4 +1,4 @@
-package com.wsf.exercise;
+package com.wsf.sort;
 
 public class Base {
 	protected static int[] array = { 44, 2, 1, 0, 99, 14, 32, 67, 51, 72, 9, 113, 114 };

@@ -1,4 +1,4 @@
-package com.wsf.exercise;
+package com.wsf.sort;
 
 /**
  * 选择排序的思想是一一比对得出较小值，先存入中间变量中，等待循环结束时在进行数据交换
