@@ -1,0 +1,1000 @@
+/*
+Navicat MySQL Data Transfer
+
+Source Server         : New
+Source Server Version : 50619
+Source Host           : localhost:3306
+Source Database       : test
+
+Target Server Type    : MYSQL
+Target Server Version : 50619
+File Encoding         : 65001
+
+Date: 2017-07-10 09:49:49
+*/
+
+SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for `aggregation_dimension`
+-- ----------------------------
+DROP TABLE IF EXISTS `aggregation_dimension`;
+CREATE TABLE `aggregation_dimension` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `rule_group_id` int(11) DEFAULT NULL,
+  `dimension_property` varchar(255) DEFAULT NULL,
+  `topo_id` int(11) DEFAULT NULL,
+  `refer_object` varchar(255) DEFAULT NULL,
+  `is_timestamp` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of aggregation_dimension
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `aggregation_rule`
+-- ----------------------------
+DROP TABLE IF EXISTS `aggregation_rule`;
+CREATE TABLE `aggregation_rule` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `rule_group_id` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `filter` varchar(255) DEFAULT NULL,
+  `formula` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of aggregation_rule
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `aggregation_rule_group`
+-- ----------------------------
+DROP TABLE IF EXISTS `aggregation_rule_group`;
+CREATE TABLE `aggregation_rule_group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `header_ids` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `sp` int(11) DEFAULT NULL,
+  `refer_objects` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of aggregation_rule_group
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `datasource`
+-- ----------------------------
+DROP TABLE IF EXISTS `datasource`;
+CREATE TABLE `datasource` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `data_type` varchar(255) NOT NULL,
+  `source_id` int(11) DEFAULT NULL,
+  `acl_id` int(11) NOT NULL,
+  `additional_info` varchar(255) DEFAULT NULL,
+  `reservedfileld1` varchar(255) DEFAULT NULL,
+  `reservedfileld2` varchar(255) DEFAULT NULL,
+  `reservedfileld3` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `acl_id` (`acl_id`) USING BTREE,
+  KEY `source_id` (`source_id`) USING BTREE,
+  CONSTRAINT `datasource_ibfk_1` FOREIGN KEY (`acl_id`) REFERENCES `sys_acl_info` (`id`),
+  CONSTRAINT `datasource_ibfk_2` FOREIGN KEY (`source_id`) REFERENCES `datasource_source_info` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of datasource
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `datasource_define_info`
+-- ----------------------------
+DROP TABLE IF EXISTS `datasource_define_info`;
+CREATE TABLE `datasource_define_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `datasource_id` int(11) NOT NULL,
+  `info_key` varchar(255) NOT NULL,
+  `info_value` varchar(255) NOT NULL,
+  `additional_info` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `datasource_id` (`datasource_id`) USING BTREE,
+  CONSTRAINT `datasource_define_info_ibfk_1` FOREIGN KEY (`datasource_id`) REFERENCES `datasource` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of datasource_define_info
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `datasource_source_info`
+-- ----------------------------
+DROP TABLE IF EXISTS `datasource_source_info`;
+CREATE TABLE `datasource_source_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `url` varchar(255) NOT NULL,
+  `additional_info` varchar(255) DEFAULT NULL,
+  `reservedfileld1` varchar(255) DEFAULT NULL,
+  `reservedfileld2` varchar(255) DEFAULT NULL,
+  `reservedfileld3` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of datasource_source_info
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `data_processed_record`
+-- ----------------------------
+DROP TABLE IF EXISTS `data_processed_record`;
+CREATE TABLE `data_processed_record` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `file_name` varchar(255) NOT NULL,
+  `file_status` varchar(255) DEFAULT NULL,
+  `datasource_id` int(11) DEFAULT NULL,
+  `modify_time` date DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `datasource_id` (`datasource_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of data_processed_record
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `header_field_map`
+-- ----------------------------
+DROP TABLE IF EXISTS `header_field_map`;
+CREATE TABLE `header_field_map` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `header_id` int(11) DEFAULT NULL,
+  `field_id` int(11) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=108 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of header_field_map
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `integrated_object_record`
+-- ----------------------------
+DROP TABLE IF EXISTS `integrated_object_record`;
+CREATE TABLE `integrated_object_record` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `object_id` varchar(255) NOT NULL,
+  `raw_object_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `raw_object_id` (`raw_object_id`) USING BTREE,
+  KEY `integrated_object_record_ibfk_1` (`object_id`) USING BTREE,
+  CONSTRAINT `integrated_object_record_ibfk_1` FOREIGN KEY (`object_id`) REFERENCES `object_record` (`id`),
+  CONSTRAINT `integrated_object_record_ibfk_2` FOREIGN KEY (`raw_object_id`) REFERENCES `object_record_raw` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of integrated_object_record
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `job_execution_log`
+-- ----------------------------
+DROP TABLE IF EXISTS `job_execution_log`;
+CREATE TABLE `job_execution_log` (
+  `id` varchar(40) NOT NULL,
+  `job_name` varchar(100) NOT NULL,
+  `task_id` varchar(255) NOT NULL,
+  `hostname` varchar(255) NOT NULL,
+  `ip` varchar(50) NOT NULL,
+  `sharding_item` int(11) NOT NULL,
+  `execution_source` varchar(20) NOT NULL,
+  `failure_cause` varchar(4000) DEFAULT NULL,
+  `is_success` int(11) NOT NULL,
+  `start_time` timestamp NULL DEFAULT NULL,
+  `complete_time` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of job_execution_log
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `job_info`
+-- ----------------------------
+DROP TABLE IF EXISTS `job_info`;
+CREATE TABLE `job_info` (
+  `id` varchar(36) NOT NULL COMMENT 'UUID 作为主键',
+  `job_name` varchar(255) NOT NULL COMMENT '任务名',
+  `job_type` varchar(20) NOT NULL DEFAULT 'simple_job' COMMENT '作业类型: simple_job, data_flow_job',
+  `class_name` varchar(255) NOT NULL COMMENT '完整类名',
+  `cron` varchar(50) NOT NULL COMMENT '定时信息',
+  `sharding_count` int(11) NOT NULL COMMENT '分片总数',
+  `sharding_parameter` varchar(255) NOT NULL DEFAULT 'NULL' COMMENT '分片参数',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '是否删除，1 是，0 否'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of job_info
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `job_status_trace_log`
+-- ----------------------------
+DROP TABLE IF EXISTS `job_status_trace_log`;
+CREATE TABLE `job_status_trace_log` (
+  `id` varchar(40) NOT NULL,
+  `job_name` varchar(100) NOT NULL,
+  `original_task_id` varchar(255) NOT NULL,
+  `task_id` varchar(255) NOT NULL,
+  `slave_id` varchar(50) NOT NULL,
+  `source` varchar(50) NOT NULL,
+  `execution_type` varchar(20) NOT NULL,
+  `sharding_item` varchar(100) NOT NULL,
+  `state` varchar(20) NOT NULL,
+  `message` varchar(4000) DEFAULT NULL,
+  `creation_time` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `TASK_ID_STATE_INDEX` (`task_id`,`state`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of job_status_trace_log
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `object_dsr`
+-- ----------------------------
+DROP TABLE IF EXISTS `object_dsr`;
+CREATE TABLE `object_dsr` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `object_id` varchar(255) NOT NULL,
+  `perpory_key` varchar(255) NOT NULL,
+  `perpory_value` varchar(255) NOT NULL,
+  `datasource_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `object_id` (`object_id`) USING BTREE,
+  KEY `datasource_id` (`datasource_id`) USING BTREE,
+  CONSTRAINT `object_dsr_ibfk_1` FOREIGN KEY (`object_id`) REFERENCES `object_record` (`id`),
+  CONSTRAINT `object_dsr_ibfk_2` FOREIGN KEY (`datasource_id`) REFERENCES `datasource` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of object_dsr
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `object_history`
+-- ----------------------------
+DROP TABLE IF EXISTS `object_history`;
+CREATE TABLE `object_history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `item_id` int(11) NOT NULL,
+  `history_type` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of object_history
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `object_media`
+-- ----------------------------
+DROP TABLE IF EXISTS `object_media`;
+CREATE TABLE `object_media` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `media_title` varchar(255) NOT NULL,
+  `media_url` varchar(255) NOT NULL,
+  `media_thumbnail_url` varchar(255) DEFAULT NULL,
+  `object_id` varchar(255) NOT NULL,
+  `additional_info` varchar(255) DEFAULT NULL,
+  `reservedfield1` varchar(255) DEFAULT NULL,
+  `reservedfield2` varchar(255) DEFAULT NULL,
+  `reservedfield3` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `object_id` (`object_id`) USING BTREE,
+  CONSTRAINT `object_media_ibfk_1` FOREIGN KEY (`object_id`) REFERENCES `object_record` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of object_media
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `object_notes`
+-- ----------------------------
+DROP TABLE IF EXISTS `object_notes`;
+CREATE TABLE `object_notes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `note_title` varchar(255) NOT NULL,
+  `note_url` varchar(255) NOT NULL,
+  `object_id` varchar(255) NOT NULL,
+  `additional_info` varchar(255) DEFAULT NULL,
+  `reservedfield1` varchar(255) DEFAULT NULL,
+  `reservedfield2` varchar(255) DEFAULT NULL,
+  `reservedfield3` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `object_id` (`object_id`) USING BTREE,
+  CONSTRAINT `object_notes_ibfk_1` FOREIGN KEY (`object_id`) REFERENCES `object_record` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of object_notes
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `object_property`
+-- ----------------------------
+DROP TABLE IF EXISTS `object_property`;
+CREATE TABLE `object_property` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `display_name` varchar(255) NOT NULL,
+  `system_name` varchar(255) NOT NULL,
+  `data_type` varchar(255) NOT NULL,
+  `is_key` tinyint(4) NOT NULL,
+  `is_basic` tinyint(4) NOT NULL,
+  `display_order` int(11) NOT NULL,
+  `parent_property_id` int(11) unsigned NOT NULL DEFAULT '0',
+  `supported_funcs` varchar(255) DEFAULT NULL,
+  `uri` varchar(255) DEFAULT NULL,
+  `is_statistic` tinyint(4) DEFAULT NULL,
+  `is_advsearch` tinyint(4) DEFAULT NULL,
+  `external_id` int(11) DEFAULT NULL,
+  `format` varchar(255) DEFAULT NULL,
+  `index_type` tinyint(4) DEFAULT NULL,
+  `analyzer` varchar(255) DEFAULT NULL,
+  `search_analyzer` varchar(255) DEFAULT NULL,
+  `term_vector` tinyint(4) DEFAULT NULL,
+  `boost` decimal(10,0) DEFAULT NULL,
+  `enable_null` tinyint(4) DEFAULT NULL,
+  `property_group_id` int(11) DEFAULT NULL,
+  `additional_info` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of object_property
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `object_property_field`
+-- ----------------------------
+DROP TABLE IF EXISTS `object_property_field`;
+CREATE TABLE `object_property_field` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `parent_property_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `data_type` varchar(255) NOT NULL,
+  `format` varchar(255) NOT NULL,
+  `enable_null` tinyint(4) DEFAULT NULL,
+  `index_type` tinyint(4) DEFAULT NULL,
+  `analyzer` varchar(255) DEFAULT NULL,
+  `search_analyzer` varchar(255) DEFAULT NULL,
+  `boost` decimal(10,0) DEFAULT NULL,
+  `term_vector` tinyint(4) DEFAULT NULL,
+  `additional_info` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `object_type_id` (`parent_property_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of object_property_field
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `object_property_group`
+-- ----------------------------
+DROP TABLE IF EXISTS `object_property_group`;
+CREATE TABLE `object_property_group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `display_order` int(11) NOT NULL,
+  `parent_object_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of object_property_group
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `object_record`
+-- ----------------------------
+DROP TABLE IF EXISTS `object_record`;
+CREATE TABLE `object_record` (
+  `id` varchar(255) NOT NULL,
+  `object_type_id` int(11) NOT NULL,
+  `es_object_id` varchar(255) NOT NULL,
+  `es_index` varchar(255) NOT NULL,
+  `es_type` varchar(255) NOT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `additional_info` varchar(255) DEFAULT NULL,
+  `reservedfield1` varchar(255) DEFAULT NULL,
+  `reservedfield2` varchar(255) DEFAULT NULL,
+  `reservedfield3` varchar(255) DEFAULT NULL,
+  `object_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `object_type_id` (`object_type_id`) USING BTREE,
+  KEY `es_object_id` (`es_object_id`) USING BTREE,
+  CONSTRAINT `object_record_ibfk_1` FOREIGN KEY (`object_type_id`) REFERENCES `object_type` (`id`),
+  CONSTRAINT `object_record_ibfk_2` FOREIGN KEY (`object_type_id`) REFERENCES `object_type` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of object_record
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `object_record_raw`
+-- ----------------------------
+DROP TABLE IF EXISTS `object_record_raw`;
+CREATE TABLE `object_record_raw` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `object_type_id` int(11) NOT NULL,
+  `es_object_id` varchar(255) NOT NULL,
+  `es_index` varchar(255) NOT NULL,
+  `es_type` varchar(255) NOT NULL,
+  `create_time` datetime NOT NULL,
+  `additional_info` varchar(255) DEFAULT NULL,
+  `reservedfield1` varchar(255) DEFAULT NULL,
+  `reservedfield2` varchar(255) DEFAULT NULL,
+  `reservedfield3` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `object_type_id` (`object_type_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1178 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of object_record_raw
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `object_relations`
+-- ----------------------------
+DROP TABLE IF EXISTS `object_relations`;
+CREATE TABLE `object_relations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `relation_type` varchar(255) NOT NULL,
+  `master_object_id` varchar(255) NOT NULL,
+  `relation_object_id` varchar(255) NOT NULL,
+  `relation_create_time` date DEFAULT NULL,
+  `relation_discovery_time` date NOT NULL,
+  `additional_info` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `master_object_id` (`master_object_id`) USING BTREE,
+  KEY `relation_object_id` (`relation_object_id`) USING BTREE,
+  KEY `relation_type` (`relation_type`) USING BTREE,
+  CONSTRAINT `object_relations_ibfk_1` FOREIGN KEY (`master_object_id`) REFERENCES `object_record` (`id`),
+  CONSTRAINT `object_relations_ibfk_2` FOREIGN KEY (`relation_object_id`) REFERENCES `object_record` (`id`),
+  CONSTRAINT `object_relations_ibfk_3` FOREIGN KEY (`relation_type`) REFERENCES `object_relation_type` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of object_relations
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `object_relation_property`
+-- ----------------------------
+DROP TABLE IF EXISTS `object_relation_property`;
+CREATE TABLE `object_relation_property` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `object_relation_type_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `display_name` varchar(255) NOT NULL,
+  `data_type` varchar(255) NOT NULL,
+  `uri` varchar(255) DEFAULT NULL,
+  `additional_info` varchar(255) DEFAULT NULL,
+  `filter` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `object_relation_type_id` (`object_relation_type_id`) USING BTREE,
+  CONSTRAINT `object_relation_property_ibfk_1` FOREIGN KEY (`object_relation_type_id`) REFERENCES `object_relation_type` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of object_relation_property
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `object_relation_type`
+-- ----------------------------
+DROP TABLE IF EXISTS `object_relation_type`;
+CREATE TABLE `object_relation_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `display_name` varchar(255) NOT NULL,
+  `uri` varchar(255) DEFAULT NULL,
+  `additional_info` varchar(255) DEFAULT NULL,
+  `reservedfield1` varchar(255) DEFAULT NULL,
+  `reservedfield2` varchar(255) DEFAULT NULL,
+  `reservedfield3` varchar(255) DEFAULT NULL,
+  `object_relation_type_id` bigint(20) DEFAULT NULL,
+  `reservedfield33` varchar(255) DEFAULT NULL,
+  `filter` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`) USING BTREE,
+  KEY `object_relation_type_id` (`object_relation_type_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of object_relation_type
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `object_type`
+-- ----------------------------
+DROP TABLE IF EXISTS `object_type`;
+CREATE TABLE `object_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `system_name` varchar(255) NOT NULL,
+  `display_name` varchar(255) NOT NULL,
+  `db_name` varchar(255) DEFAULT NULL,
+  `db_type` varchar(255) DEFAULT NULL,
+  `object_type` varchar(255) NOT NULL,
+  `parent_id` int(11) DEFAULT NULL,
+  `external_id` int(11) DEFAULT NULL,
+  `uri` varchar(255) DEFAULT NULL,
+  `additional_info` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=212 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of object_type
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `operation_record`
+-- ----------------------------
+DROP TABLE IF EXISTS `operation_record`;
+CREATE TABLE `operation_record` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(255) NOT NULL,
+  `author` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `time_stamp` varchar(255) NOT NULL,
+  `topo_json` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of operation_record
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `permissions_type`
+-- ----------------------------
+DROP TABLE IF EXISTS `permissions_type`;
+CREATE TABLE `permissions_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `display_name` varchar(255) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of permissions_type
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `raw_object_dsr`
+-- ----------------------------
+DROP TABLE IF EXISTS `raw_object_dsr`;
+CREATE TABLE `raw_object_dsr` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `object_id` int(11) NOT NULL,
+  `perpory_key` varchar(255) NOT NULL,
+  `perpory_value` varchar(255) NOT NULL,
+  `datasource_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `object_id` (`object_id`) USING BTREE,
+  KEY `datasource_id` (`datasource_id`) USING BTREE,
+  CONSTRAINT `raw_object_dsr_ibfk_1` FOREIGN KEY (`object_id`) REFERENCES `object_record_raw` (`id`),
+  CONSTRAINT `raw_object_dsr_ibfk_2` FOREIGN KEY (`datasource_id`) REFERENCES `datasource` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of raw_object_dsr
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `recommend`
+-- ----------------------------
+DROP TABLE IF EXISTS `recommend`;
+CREATE TABLE `recommend` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `item_id` varchar(255) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=995 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of recommend
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `revsion_db`
+-- ----------------------------
+DROP TABLE IF EXISTS `revsion_db`;
+CREATE TABLE `revsion_db` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `operation` varchar(255) NOT NULL,
+  `operator` varchar(255) NOT NULL,
+  `object_id` varchar(255) NOT NULL,
+  `perporty_key` varchar(255) NOT NULL,
+  `perproty_value` varchar(255) NOT NULL,
+  `change_des` varchar(255) NOT NULL,
+  `time` date NOT NULL,
+  `event` varchar(255) NOT NULL,
+  `version` int(11) NOT NULL,
+  `additional_info` varchar(255) DEFAULT NULL,
+  `reservedfield1` varchar(255) DEFAULT NULL,
+  `reservedfield2` varchar(255) DEFAULT NULL,
+  `reservedfield3` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `object_id` (`object_id`) USING BTREE,
+  CONSTRAINT `revsion_db_ibfk_1` FOREIGN KEY (`object_id`) REFERENCES `object_record` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of revsion_db
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `schema_load_record`
+-- ----------------------------
+DROP TABLE IF EXISTS `schema_load_record`;
+CREATE TABLE `schema_load_record` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `date` date NOT NULL,
+  `version` varchar(255) NOT NULL,
+  `author` varchar(255) NOT NULL,
+  `domain` varchar(255) DEFAULT NULL,
+  `load_time` date NOT NULL,
+  `additional_info` varchar(255) DEFAULT NULL,
+  `reservedfield1` varchar(255) DEFAULT NULL,
+  `reservedfield2` varchar(255) DEFAULT NULL,
+  `reservedfield3` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of schema_load_record
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `sys_acl_info`
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_acl_info`;
+CREATE TABLE `sys_acl_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `code` varchar(255) NOT NULL,
+  `creator` varchar(255) NOT NULL,
+  `create_time` date NOT NULL,
+  `additional_info` varchar(255) DEFAULT NULL,
+  `reservedfileld1` varchar(255) DEFAULT NULL,
+  `reservedfileld2` varchar(255) DEFAULT NULL,
+  `reservedfileld3` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of sys_acl_info
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `sys_datasource_type`
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_datasource_type`;
+CREATE TABLE `sys_datasource_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `display_name` varchar(255) NOT NULL,
+  `additional_info` varchar(255) DEFAULT NULL,
+  `reservedfield1` varchar(255) DEFAULT NULL,
+  `reservedfield2` varchar(255) DEFAULT NULL,
+  `reservedfield3` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of sys_datasource_type
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `sys_data_type`
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_data_type`;
+CREATE TABLE `sys_data_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `display_name` varchar(255) NOT NULL,
+  `additional_info` varchar(255) DEFAULT NULL,
+  `reservedfield1` varchar(255) DEFAULT NULL,
+  `reservedfield2` varchar(255) DEFAULT NULL,
+  `reservedfield3` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of sys_data_type
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `sys_func_menu`
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_func_menu`;
+CREATE TABLE `sys_func_menu` (
+  `id` int(11) NOT NULL,
+  `parent_menu_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `display_name` varchar(255) NOT NULL,
+  `additional_info` varchar(255) DEFAULT NULL,
+  `reservedfield1` varchar(255) DEFAULT NULL,
+  `reservedfield2` varchar(255) DEFAULT NULL,
+  `reservedfield3` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of sys_func_menu
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `sys_group`
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_group`;
+CREATE TABLE `sys_group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `code` varchar(255) NOT NULL,
+  `permission` varchar(255) NOT NULL,
+  `creator` varchar(255) NOT NULL,
+  `create_time` date NOT NULL,
+  `additional_info` varchar(255) DEFAULT NULL,
+  `reservedfileld1` varchar(255) DEFAULT NULL,
+  `reservedfileld2` varchar(255) DEFAULT NULL,
+  `reservedfileld3` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of sys_group
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `sys_group_acl`
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_group_acl`;
+CREATE TABLE `sys_group_acl` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `acl_id` int(11) NOT NULL,
+  `group_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `acl_id` (`acl_id`) USING BTREE,
+  KEY `group_id` (`group_id`) USING BTREE,
+  CONSTRAINT `sys_group_acl_ibfk_1` FOREIGN KEY (`acl_id`) REFERENCES `sys_acl_info` (`id`),
+  CONSTRAINT `sys_group_acl_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `sys_group` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of sys_group_acl
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `sys_helper`
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_helper`;
+CREATE TABLE `sys_helper` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `value_name` varchar(255) DEFAULT NULL,
+  `datetime_value` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of sys_helper
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `sys_user`
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_user`;
+CREATE TABLE `sys_user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `account` varchar(255) NOT NULL,
+  `passwd` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `create_time` date NOT NULL,
+  `creator` varchar(255) NOT NULL,
+  `additional_info` varchar(255) DEFAULT NULL,
+  `reservedfileld1` varchar(255) DEFAULT NULL,
+  `reservedfileld2` varchar(255) DEFAULT NULL,
+  `reservedfileld3` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `account` (`account`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of sys_user
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `sys_user_group`
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_user_group`;
+CREATE TABLE `sys_user_group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `group_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`) USING BTREE,
+  KEY `group_id` (`group_id`) USING BTREE,
+  CONSTRAINT `sys_user_group_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`),
+  CONSTRAINT `sys_user_group_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `sys_group` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of sys_user_group
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `sys_workset`
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_workset`;
+CREATE TABLE `sys_workset` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `owner` varchar(255) NOT NULL,
+  `creator` varchar(255) NOT NULL,
+  `create_time` date NOT NULL,
+  `additional_info` varchar(255) DEFAULT NULL,
+  `reservedfield1` varchar(255) DEFAULT NULL,
+  `reservedfield2` varchar(255) DEFAULT NULL,
+  `reservedfield3` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of sys_workset
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `sys_workset_share`
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_workset_share`;
+CREATE TABLE `sys_workset_share` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) NOT NULL,
+  `work_folder_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `work_folder_id` (`work_folder_id`) USING BTREE,
+  KEY `username` (`username`) USING BTREE,
+  CONSTRAINT `sys_workset_share_ibfk_1` FOREIGN KEY (`work_folder_id`) REFERENCES `sys_work_folder` (`id`),
+  CONSTRAINT `sys_workset_share_ibfk_2` FOREIGN KEY (`username`) REFERENCES `sys_user` (`account`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of sys_workset_share
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `sys_workspace`
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_workspace`;
+CREATE TABLE `sys_workspace` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `owner` varchar(255) NOT NULL,
+  `creator` varchar(255) NOT NULL,
+  `create_time` date NOT NULL,
+  `additional_info` varchar(255) DEFAULT NULL,
+  `reservedfield1` varchar(255) DEFAULT NULL,
+  `reservedfield2` varchar(255) DEFAULT NULL,
+  `reservedfield3` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of sys_workspace
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `sys_workspace_set`
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_workspace_set`;
+CREATE TABLE `sys_workspace_set` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `workspace_id` int(11) NOT NULL,
+  `workset_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `workspace_id` (`workspace_id`) USING BTREE,
+  KEY `workset_id` (`workset_id`) USING BTREE,
+  CONSTRAINT `sys_workspace_set_ibfk_1` FOREIGN KEY (`workspace_id`) REFERENCES `sys_workspace` (`id`),
+  CONSTRAINT `sys_workspace_set_ibfk_2` FOREIGN KEY (`workset_id`) REFERENCES `sys_workset` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of sys_workspace_set
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `sys_work_folder`
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_work_folder`;
+CREATE TABLE `sys_work_folder` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `owner` varchar(255) NOT NULL,
+  `workset_id` int(11) NOT NULL,
+  `creator` varchar(255) NOT NULL,
+  `create_time` date NOT NULL,
+  `additional_info` varchar(255) DEFAULT NULL,
+  `reservedfield1` varchar(255) DEFAULT NULL,
+  `reservedfield2` varchar(255) DEFAULT NULL,
+  `reservedfield3` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `workset_id` (`workset_id`) USING BTREE,
+  CONSTRAINT `sys_work_folder_ibfk_1` FOREIGN KEY (`workset_id`) REFERENCES `sys_workset` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of sys_work_folder
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `sys_work_folder_content`
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_work_folder_content`;
+CREATE TABLE `sys_work_folder_content` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `data_id` varchar(255) NOT NULL,
+  `work_folder_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `work_folder_id` (`work_folder_id`) USING BTREE,
+  KEY `data_id` (`data_id`) USING BTREE,
+  CONSTRAINT `sys_work_folder_content_ibfk_1` FOREIGN KEY (`work_folder_id`) REFERENCES `sys_work_folder` (`id`),
+  CONSTRAINT `sys_work_folder_content_ibfk_2` FOREIGN KEY (`data_id`) REFERENCES `object_record` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of sys_work_folder_content
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `word_annotate_recorder`
+-- ----------------------------
+DROP TABLE IF EXISTS `word_annotate_recorder`;
+CREATE TABLE `word_annotate_recorder` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `key_name` varchar(255) NOT NULL COMMENT '记录类型，new_article, new_thesauru, old_article, old_thesauru, pending_article, pending_thesauru',
+  `pending_uuid` char(36) DEFAULT NULL COMMENT '待处理数据 ID',
+  `start_time` datetime DEFAULT NULL COMMENT '起始时间',
+  `end_time` datetime DEFAULT NULL COMMENT '结束时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of word_annotate_recorder
+-- ----------------------------
