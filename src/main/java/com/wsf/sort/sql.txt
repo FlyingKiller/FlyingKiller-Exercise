@@ -4,13 +4,13 @@ Navicat MySQL Data Transfer
 Source Server         : New
 Source Server Version : 50619
 Source Host           : localhost:3306
-Source Database       : test
+Source Database       : test2
 
 Target Server Type    : MYSQL
 Target Server Version : 50619
 File Encoding         : 65001
 
-Date: 2017-07-10 09:49:49
+Date: 2017-07-10 10:15:55
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -145,7 +145,7 @@ CREATE TABLE `data_processed_record` (
   `status` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `datasource_id` (`datasource_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of data_processed_record
@@ -160,8 +160,9 @@ CREATE TABLE `header_field_map` (
   `header_id` int(11) DEFAULT NULL,
   `field_id` int(11) DEFAULT NULL,
   `type` varchar(255) DEFAULT NULL,
+  `is_deleted` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=108 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=28316 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of header_field_map
@@ -283,7 +284,7 @@ CREATE TABLE `object_history` (
   `item_id` int(11) NOT NULL,
   `history_type` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of object_history
@@ -352,18 +353,20 @@ CREATE TABLE `object_property` (
   `uri` varchar(255) DEFAULT NULL,
   `is_statistic` tinyint(4) DEFAULT NULL,
   `is_advsearch` tinyint(4) DEFAULT NULL,
-  `external_id` int(11) DEFAULT NULL,
+  `external_id` varchar(255) DEFAULT NULL,
   `format` varchar(255) DEFAULT NULL,
-  `index_type` tinyint(4) DEFAULT NULL,
+  `index_type` varchar(255) DEFAULT NULL,
   `analyzer` varchar(255) DEFAULT NULL,
   `search_analyzer` varchar(255) DEFAULT NULL,
-  `term_vector` tinyint(4) DEFAULT NULL,
+  `term_vector` varchar(255) DEFAULT NULL,
   `boost` decimal(10,0) DEFAULT NULL,
   `enable_null` tinyint(4) DEFAULT NULL,
   `property_group_id` int(11) DEFAULT NULL,
   `additional_info` varchar(255) DEFAULT NULL,
+  `object_type_id` int(11) DEFAULT NULL,
+  `is_deleted` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16189 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of object_property
@@ -380,15 +383,16 @@ CREATE TABLE `object_property_field` (
   `data_type` varchar(255) NOT NULL,
   `format` varchar(255) NOT NULL,
   `enable_null` tinyint(4) DEFAULT NULL,
-  `index_type` tinyint(4) DEFAULT NULL,
+  `index_type` varchar(255) DEFAULT NULL,
   `analyzer` varchar(255) DEFAULT NULL,
   `search_analyzer` varchar(255) DEFAULT NULL,
   `boost` decimal(10,0) DEFAULT NULL,
-  `term_vector` tinyint(4) DEFAULT NULL,
+  `term_vector` varchar(255) DEFAULT NULL,
   `additional_info` varchar(255) DEFAULT NULL,
+  `is_deleted` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `object_type_id` (`parent_property_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of object_property_field
@@ -403,8 +407,9 @@ CREATE TABLE `object_property_group` (
   `name` varchar(255) NOT NULL,
   `display_order` int(11) NOT NULL,
   `parent_object_id` int(11) NOT NULL,
+  `is_deleted` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3519 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of object_property_group
@@ -426,11 +431,10 @@ CREATE TABLE `object_record` (
   `reservedfield2` varchar(255) DEFAULT NULL,
   `reservedfield3` varchar(255) DEFAULT NULL,
   `object_id` int(11) DEFAULT NULL,
+  `is_deleted` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `object_type_id` (`object_type_id`) USING BTREE,
-  KEY `es_object_id` (`es_object_id`) USING BTREE,
-  CONSTRAINT `object_record_ibfk_1` FOREIGN KEY (`object_type_id`) REFERENCES `object_type` (`id`),
-  CONSTRAINT `object_record_ibfk_2` FOREIGN KEY (`object_type_id`) REFERENCES `object_type` (`id`)
+  KEY `es_object_id` (`es_object_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -452,9 +456,10 @@ CREATE TABLE `object_record_raw` (
   `reservedfield1` varchar(255) DEFAULT NULL,
   `reservedfield2` varchar(255) DEFAULT NULL,
   `reservedfield3` varchar(255) DEFAULT NULL,
+  `is_deleted` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `object_type_id` (`object_type_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1178 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of object_record_raw
@@ -502,7 +507,7 @@ CREATE TABLE `object_relation_property` (
   PRIMARY KEY (`id`),
   KEY `object_relation_type_id` (`object_relation_type_id`) USING BTREE,
   CONSTRAINT `object_relation_property_ibfk_1` FOREIGN KEY (`object_relation_type_id`) REFERENCES `object_relation_type` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of object_relation_property
@@ -527,7 +532,7 @@ CREATE TABLE `object_relation_type` (
   PRIMARY KEY (`id`),
   KEY `name` (`name`) USING BTREE,
   KEY `object_relation_type_id` (`object_relation_type_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of object_relation_type
@@ -546,12 +551,13 @@ CREATE TABLE `object_type` (
   `db_type` varchar(255) DEFAULT NULL,
   `object_type` varchar(255) NOT NULL,
   `parent_id` int(11) DEFAULT NULL,
-  `external_id` int(11) DEFAULT NULL,
+  `external_id` varchar(255) DEFAULT NULL,
   `uri` varchar(255) DEFAULT NULL,
   `additional_info` varchar(255) DEFAULT NULL,
+  `is_deleted` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=212 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5158 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of object_type
@@ -571,7 +577,7 @@ CREATE TABLE `operation_record` (
   `time_stamp` varchar(255) NOT NULL,
   `topo_json` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of operation_record
@@ -623,7 +629,7 @@ CREATE TABLE `recommend` (
   `item_id` varchar(255) NOT NULL,
   `user_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=995 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of recommend
@@ -675,8 +681,9 @@ CREATE TABLE `schema_load_record` (
   `reservedfield2` varchar(255) DEFAULT NULL,
   `reservedfield3` varchar(255) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
+  `is_deleted` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=290 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of schema_load_record
@@ -767,17 +774,18 @@ CREATE TABLE `sys_func_menu` (
 DROP TABLE IF EXISTS `sys_group`;
 CREATE TABLE `sys_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `code` varchar(255) NOT NULL,
-  `permission` varchar(255) NOT NULL,
-  `creator` varchar(255) NOT NULL,
-  `create_time` date NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `code` varchar(255) DEFAULT NULL,
+  `permission` varchar(255) DEFAULT NULL,
+  `creator` varchar(255) DEFAULT NULL,
+  `create_time` date DEFAULT NULL,
   `additional_info` varchar(255) DEFAULT NULL,
   `reservedfileld1` varchar(255) DEFAULT NULL,
   `reservedfileld2` varchar(255) DEFAULT NULL,
   `reservedfileld3` varchar(255) DEFAULT NULL,
+  `creator_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sys_group
@@ -811,7 +819,7 @@ CREATE TABLE `sys_helper` (
   `value_name` varchar(255) DEFAULT NULL,
   `datetime_value` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sys_helper
@@ -824,17 +832,24 @@ DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `account` varchar(255) NOT NULL,
+  `user_name` varchar(255) DEFAULT NULL,
   `passwd` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
+  `phone_number` varchar(255) DEFAULT NULL,
   `create_time` date NOT NULL,
-  `creator` varchar(255) NOT NULL,
+  `creator_id` int(11) NOT NULL,
+  `gender` varchar(255) DEFAULT NULL COMMENT '性别',
+  `birthday` date DEFAULT NULL COMMENT '生日',
+  `household_register` varchar(255) DEFAULT NULL COMMENT '户籍',
+  `position` varchar(255) DEFAULT NULL COMMENT '职位',
+  `status` int(11) DEFAULT NULL,
   `additional_info` varchar(255) DEFAULT NULL,
   `reservedfileld1` varchar(255) DEFAULT NULL,
   `reservedfileld2` varchar(255) DEFAULT NULL,
   `reservedfileld3` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `account` (`account`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sys_user
@@ -846,14 +861,12 @@ CREATE TABLE `sys_user` (
 DROP TABLE IF EXISTS `sys_user_group`;
 CREATE TABLE `sys_user_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
   `group_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`) USING BTREE,
-  KEY `group_id` (`group_id`) USING BTREE,
-  CONSTRAINT `sys_user_group_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`),
-  CONSTRAINT `sys_user_group_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `sys_group` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  KEY `group_id` (`group_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sys_user_group
@@ -993,8 +1006,29 @@ CREATE TABLE `word_annotate_recorder` (
   `start_time` datetime DEFAULT NULL COMMENT '起始时间',
   `end_time` datetime DEFAULT NULL COMMENT '结束时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of word_annotate_recorder
 -- ----------------------------
+
+-- ----------------------------
+-- Procedure structure for `test`
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `test`;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `test`()
+begin
+update event set time=now();
+end
+;;
+DELIMITER ;
+
+-- ----------------------------
+-- Event structure for `e_test`
+-- ----------------------------
+DROP EVENT IF EXISTS `e_test`;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` EVENT `e_test` ON SCHEDULE EVERY 10 SECOND STARTS '2016-12-26 17:34:51' ON COMPLETION PRESERVE DISABLE DO call test()
+;;
+DELIMITER ;
